@@ -1,4 +1,7 @@
 // Vercel serverless function for translation
+export const config = {
+  runtime: 'edge'
+};
 
 // DeepL API configuration
 const DEEPL_API_URL = 'https://api-free.deepl.com/v2/translate';
