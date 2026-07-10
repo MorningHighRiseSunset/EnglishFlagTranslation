@@ -1,4 +1,4 @@
-// Client script: auto-detect-as-you-type with optional manual override
+ï»¿// Client script: auto-detect-as-you-type with optional manual override
 // Localized UI strings
 const i18n = {
     en: {
@@ -50,8 +50,8 @@ let lastInput = null;
 // Pinyin conversion helper for iOS TTS fallback
 function mandarinToPinyinStr(text) {
     const cjkToPinyin = {
-        '??': 'nüèdài', '??': 'zhongwén', '??': 'ni hao', '??': 'xièxiè',
-        '???': 'duìbùqi', '??': 'zàijiàn', '?': 'shì', '?': 'bù',
+        '??': 'nï¿½ï¿½dï¿½i', '??': 'zhongwï¿½n', '??': 'ni hao', '??': 'xiï¿½xiï¿½',
+        '???': 'duï¿½bï¿½qi', '??': 'zï¿½ijiï¿½n', '?': 'shï¿½', '?': 'bï¿½',
         '?': 'you', '?': 'hen', '?': 'hao', '?': 'ma'
     };
     let result = text;
@@ -276,6 +276,12 @@ async function startTranslate() {
     const text = input.value.trim();
     if (!text) return;
 
+    // Check if user is requesting alphabet
+    if (isAlphabetRequest(text)) {
+        displayAlphabet(output);
+        return;
+    }
+
     setBusy(true);
     try {
         // Build payload depending on manual mode
@@ -341,6 +347,24 @@ function friendlyNameFromManualKey(key) {
 function localeString(k) {
     const l = localizeUI();
     return l[k] || k;
+}
+
+// Check if input is requesting alphabet
+function isAlphabetRequest(text) {
+    const lowerText = text.toLowerCase().trim();
+    return lowerText === 'alphabet' || lowerText === 'show me alphabet' || lowerText === 'show alphabet';
+}
+
+// Display English alphabet
+function displayAlphabet(output) {
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    typeOutputAnimated(output, alphabet);
+    
+    // Update detection label
+    const detectLabel = document.getElementById('detectedInfo');
+    if (detectLabel) {
+        detectLabel.textContent = 'English Alphabet';
+    }
 }
 
 // Initialize UI
@@ -419,4 +443,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 });
+
 
