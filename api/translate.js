@@ -1,5 +1,4 @@
 // Vercel serverless function for translation
-import { TranslationServiceClient } from '@google-cloud/translate/build/v3';
 
 // DeepL API configuration
 const DEEPL_API_URL = 'https://api-free.deepl.com/v2/translate';
@@ -18,24 +17,18 @@ const DEEPL_LANGUAGE_MAP = {
   'en': 'EN',
   'es': 'ES',
   'fr': 'FR',
-  'hi': 'HI', // DeepL may not support Hindi
+  'hi': 'HI',
   'zh': 'ZH',
-  'vi': 'VI' // DeepL may not support Vietnamese
+  'vi': 'VI'
 };
 
 // Simple language detection based on character patterns
 function detectLanguage(text) {
-  // Check for Chinese characters
   if (/[\u4e00-\u9fff]/.test(text)) return 'zh';
-  // Check for Hindi characters
   if (/[\u0900-\u097f]/.test(text)) return 'hi';
-  // Check for Vietnamese characters
   if (/[\u1ea0-\u1ef9]/.test(text)) return 'vi';
-  // Check for French characters
   if (/[àâäéèêëïîôùûüÿç]/.test(text)) return 'fr';
-  // Check for Spanish characters
   if (/[ñáéíóúü]/.test(text)) return 'es';
-  // Default to English
   return 'en';
 }
 
@@ -112,7 +105,6 @@ async function translateWithGoogle(text, targetLang, sourceLang = null) {
 }
 
 export default async function handler(req, res) {
-  // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -124,14 +116,10 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Text is required' });
     }
 
-    // Map manual keys to language codes
     const targetLang = LANGUAGE_MAP[target] || 'es';
     const sourceLang = source ? LANGUAGE_MAP[source] : null;
-
-    // Detect source language if not provided
     const detectedSource = sourceLang || detectLanguage(text);
 
-    // Try DeepL first, fall back to Google
     let result;
     let usedService = 'deepl';
 
