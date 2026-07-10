@@ -2,11 +2,7 @@
   "name": "english-flag-translation",
   "version": "1.0.0",
   "description": "English Translation Assistant",
-  "scripts": {
-    "dev": "vercel dev",
-    "build": "vercel build",
-    "deploy": "vercel --prod"
-  },
+  "scripts": {},
   "dependencies": {
     "@vercel/analytics": "^1.0.0"
   }
